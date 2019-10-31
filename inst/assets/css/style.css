@@ -1,0 +1,216 @@
+#item-container .box {
+	overflow: hidden;
+	position: relative;
+	border-radius: 3px;
+	background: #fff;
+	margin-bottom: 30px;
+	font-size: 13px;
+}
+
+img[data-src], 
+img[data-srcset] {
+	min-height: 50px; 
+	min-width: 50px; 
+}
+
+#item-container .box:hover .box-option {
+	opacity: 1;
+	filter: alpha(opacity=1);
+	-webkit-transform: translateY(0px);
+	-moz-transform: translateY(0px);
+	-ms-transform: translateY(0px);
+	-o-transform: translateY(0px);
+	transform: translateY(0px);
+}
+
+#item-container img {
+	object-fit: cover;
+	height: 100%;
+	width: 100%;
+}
+
+#item-container .box-option {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	padding: 10px;
+	background-color: rgba(255, 255, 255, 0.95);
+	-webkit-transform: translateY(-100px);
+	-moz-transform: translateY(-100px);
+	-ms-transform: translateY(-100px);
+	-o-transform: translateY(-100px);
+	transform: translateY(-100px);
+	opacity: 0;
+	filter: alpha(opacity=0);
+	-webkit-transition: all .25s ease-in-out;
+	-moz-transition: all .25s ease-in-out;
+	-ms-transition: all .25s ease-in-out;
+	-o-transition: all .25s ease-in-out;
+	transition: all .25s ease-in-out;
+}
+
+#item-container .box-option ul {
+    width: 100%;
+    display: table;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#item-container .box-option ul > li {
+    display: table-cell;
+    width: 25%;
+}
+
+#item-container .box-option ul > li > a {
+    display: block;
+    text-align: center;
+    font-size: 18px;
+    line-height: 26px;
+    color: #333333;
+    -webkit-transition: .25s ease-in-out;
+	-moz-transition: .25s ease-in-out;
+	-o-transition: .25s ease-in-out;
+	text-decoration: none;
+}
+
+#item-container .box-option ul > li > a:hover {
+	color: #5f3d8c;
+}
+
+#item-container .box-option ul > li > a span {
+    display: block;
+    padding: 5px 0;
+    text-align: center;
+    font-size: 10px;
+    line-height: 10px;
+    font-weight: 400;
+    text-transform: uppercase;
+}
+
+#item-container .box-option:empty {
+    display: none;
+}
+
+#item-container .image-box {
+	margin-bottom: 10px;
+}
+
+#item-container .box-body {
+	margin: 10px 10px 0 10px;
+}
+
+#item-container .box-body p {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+#item-container .box-body:empty {
+    display: none;
+}
+
+.jPages_bottom {
+	width: 100%;
+	padding: 0 15px;
+	position: relative;
+    font-size: 13px;
+    display: inline-block;
+}
+
+.jPages_info {
+	float: left;
+	margin: 7px 0;
+}
+
+.jPages_select {
+	margin: 0 30px;
+	float: left;
+}
+
+.jPages_select label {
+    font-weight: normal;
+    text-align: left;
+    white-space: nowrap;
+    margin-bottom: 0;
+    line-height: 30px;
+}
+
+.jPages_select select {
+    color: #404040;
+    background-color: #FFF;
+    border-color: #ddd;
+    outline: 0;
+    box-shadow: 0 0 0 0 transparent;
+    line-height: 1.6;
+    border-radius: 4px;
+    height: 32px;
+    font-size: 13px;
+    margin-right: 15px;
+    width: 75px;
+	display: inline-block;
+}
+
+.jPages_pagination {
+    display: inline-block;
+    padding: 0;
+    float: right;
+    border-radius: 4px;
+}
+
+.jPages_pagination > a,
+.jPages_pagination > span {
+    display: inline;
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    margin-left: -1px;
+    line-height: 1.42857143;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    text-decoration: none;
+}
+
+.jPages_pagination> span {
+    color: #777;
+    cursor: not-allowed;
+    background-color: #fff;
+    border-color: #ddd;
+}
+
+.jPages_pagination > a {
+	color: #666;
+    cursor: pointer;
+	background-color: #fafafa;
+}
+
+.jPages_pagination > a:hover,
+.jPages_pagination > a:focus {
+    text-decoration: none;
+}
+
+.jPages_pagination > a.jp-current, 
+.jPages_pagination > a:hover.jp-current, 
+.jPages_pagination > a:focus.jp-current {
+    background-color: #cd3a56;
+    border-color: #e2404e;
+    z-index: 3;
+    color: #fff;
+    cursor: default;
+}
+
+.jPages_pagination > a:focus, 
+.jPages_pagination > a:hover {
+    color: #4E2880;
+}
+
+.jPages_pagination > a:first-child {
+    margin-left: 0;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.jPages_pagination > a:last-child {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
