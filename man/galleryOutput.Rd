@@ -17,8 +17,24 @@ values.}
 \link{validateCssUnit}.}
 
 \item{height}{The height of each input image, e.g., \code{'200px'}; see
-\link{validateCssUnit}.
+\link{validateCssUnit}.}
 
+\item{expr}{An expression to create an image gallery widget (normally via
+\code{gallery()}), or a data object to be passed to \code{gallery()} to
+create an image gallery widget.}
+
+\item{env}{The environment in which to evaluate \code{expr}.}
+
+\item{quoted}{Is \code{expr} a quoted expression (with \code{quote()})? This
+is useful if you want to save an expression in a variable.}
+}
+\description{
+These functions are like most \code{fooOutput()} and \code{renderFoo()}
+functions in the \pkg{shiny} package. The former is used to create a
+container for a gallery, and the latter is used in the server logic to
+render the gallery.
+}
+\examples{
 ## Only run examples in interactive R sessions
 if (interactive()) {
   library(shiny)
@@ -45,20 +61,6 @@ if (interactive()) {
   }
 
   shinyApp(ui, server)
-}}
-
-\item{expr}{An expression to create an image gallery widget (normally via
-\code{gallery()}), or a data object to be passed to \code{gallery()} to
-create an image gallery widget.}
-
-\item{env}{The environment in which to evaluate \code{expr}.}
-
-\item{quoted}{Is \code{expr} a quoted expression (with \code{quote()})? This
-is useful if you want to save an expression in a variable.}
 }
-\description{
-These functions are like most \code{fooOutput()} and \code{renderFoo()}
-functions in the \pkg{shiny} package. The former is used to create a
-container for a gallery, and the latter is used in the server logic to
-render the gallery.
+
 }

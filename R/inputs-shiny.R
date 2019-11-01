@@ -12,6 +12,7 @@
 #' @param height The height of each input image, e.g., \code{'200px'}; see
 #' \link{validateCssUnit}.
 #'
+#' @examples
 #' ## Only run examples in interactive R sessions
 #' if (interactive()) {
 #'   library(shiny)
