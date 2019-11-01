@@ -11,7 +11,7 @@ status](https://ci.appveyor.com/api/projects/status/github/stefanieschneider/shi
 
 ## Overview
 
-This R package creates image gallery controls with pagination to show
+This R package creates image gallery widgets with pagination to show
 images based on file or URL paths. shinygallery is built on top of
 [jPages](https://github.com/luis-almeida/jPages) and
 [Bootstrap](https://getbootstrap.com/).
@@ -43,19 +43,17 @@ if (interactive()) {
   files <- list.files(file_path, full.names = TRUE)
   values <- rep(sapply(files, get_uri), 10)
 
-  ui <- fluidPage(
-    gallery(
-      "artworks", values = values,
-      options = list(
-        "detailsLabel" = "Details",
-        "addLabel" = "Add"
-      )
-    )
-  )
+  ui <- fluidPage(galleryOutput("gallery"))
 
   server <- function(input, output, session) {
-    observeEvent(input$jPages_click, {
-      print(input$jPages_click)
+    observeEvent(input$gallery_click, {
+      print(input$gallery_click)
+    })
+
+    output$gallery <- renderGallery({
+      gallery(values, height = 150, options = list(
+        "detailsLabel" = "Details", "addLabel" = "Add"
+      ))
     })
   }
 

@@ -11,19 +11,17 @@ file_path <- system.file("extdata", package = "shinygallery")
 files <- list.files(file_path, full.names = TRUE)
 values <- rep(sapply(files, get_uri), 10)
 
-ui <- fluidPage(
-  gallery(
-    "artworks", values = values,
-    options = list(
-      "detailsLabel" = "Details",
-      "addLabel" = "Add"
-    )
-  )
-)
+ui <- fluidPage(galleryOutput("gallery"))
 
 server <- function(input, output, session) {
-  observeEvent(input$jPages_click, {
-    print(input$jPages_click)
+  observeEvent(input$gallery_click, {
+    print(input$gallery_click)
+  })
+
+  output$gallery <- renderGallery({
+    gallery(values, height = 150, options = list(
+      "detailsLabel" = "Details", "addLabel" = "Add"
+    ))
   })
 }
 

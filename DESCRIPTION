@@ -1,9 +1,9 @@
 Package: shinygallery
-Title: Create Image Gallery Controls with 'Shiny'
+Title: Create Image Gallery Widgets with 'Shiny'
 Version: 0.1.0
 Authors@R: person('Stefanie Schneider', email = 'stefanie.schneider@itg.uni-muenchen.de', role = c('cre', 'aut'), comment = c(ORCID = "0000-0003-4915-6949"))
 Maintainer: Stefanie Schneider <stefanie.schneider@itg.uni-muenchen.de>
-Description: Create image gallery controls with pagination to show images based on file or URL paths.
+Description: Create image gallery widgets with pagination to show images based on file or URL paths.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -17,6 +17,7 @@ Suggests:
     roxygen2
 Imports: 
     shiny (>= 1.0.0),
-    htmltools (>= 0.2.6)
+    htmltools (>= 0.2.6),
+    htmlwidgets
 Depends:
     R (>= 3.0)

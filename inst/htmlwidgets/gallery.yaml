@@ -1,0 +1,21 @@
+dependencies:
+  - name: jpages
+    version: 0.7
+    src: "htmlwidgets/lib/jpages"
+    script: jpages.min.js
+    stylesheet: jpages.css
+  - name: lazyload
+    version: 1.9.3
+    src: "htmlwidgets/lib/lazyload"
+    script: lazyload.min.js
+    stylesheet: lazyload.css
+  - name: sprintf
+    version: 1.1.2
+    src: "htmlwidgets/lib/sprintf"
+    script: sprintf.min.js
+  - name: fontawesome
+    version: 5.3.1
+    src: "htmlwidgets/lib/fontawesome"
+    stylesheet: 
+      - all.min.css
+      - v4-shims.min.css

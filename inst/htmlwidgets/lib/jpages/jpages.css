@@ -1,4 +1,10 @@
-#item-container .box {
+.gallery img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+}
+
+.gallery .box {
 	overflow: hidden;
 	position: relative;
 	border-radius: 3px;
@@ -7,13 +13,7 @@
 	font-size: 13px;
 }
 
-img[data-src], 
-img[data-srcset] {
-	min-height: 50px; 
-	min-width: 50px; 
-}
-
-#item-container .box:hover .box-option {
+.gallery .box:hover .box-option {
 	opacity: 1;
 	filter: alpha(opacity=1);
 	-webkit-transform: translateY(0px);
@@ -23,13 +23,7 @@ img[data-srcset] {
 	transform: translateY(0px);
 }
 
-#item-container img {
-	object-fit: cover;
-	height: 100%;
-	width: 100%;
-}
-
-#item-container .box-option {
+.gallery .box-option {
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -50,7 +44,7 @@ img[data-srcset] {
 	transition: all .25s ease-in-out;
 }
 
-#item-container .box-option ul {
+.gallery .box-option ul {
     width: 100%;
     display: table;
     list-style-type: none;
@@ -58,12 +52,12 @@ img[data-srcset] {
     padding: 0;
 }
 
-#item-container .box-option ul > li {
+.gallery .box-option ul > li {
     display: table-cell;
     width: 25%;
 }
 
-#item-container .box-option ul > li > a {
+.gallery .box-option ul > li > a {
     display: block;
     text-align: center;
     font-size: 18px;
@@ -75,11 +69,11 @@ img[data-srcset] {
 	text-decoration: none;
 }
 
-#item-container .box-option ul > li > a:hover {
+.gallery .box-option ul > li > a:hover {
 	color: #5f3d8c;
 }
 
-#item-container .box-option ul > li > a span {
+.gallery .box-option ul > li > a span {
     display: block;
     padding: 5px 0;
     text-align: center;
@@ -89,24 +83,24 @@ img[data-srcset] {
     text-transform: uppercase;
 }
 
-#item-container .box-option:empty {
+.gallery .box-option:empty {
     display: none;
 }
 
-#item-container .image-box {
+.gallery .image-box {
 	margin-bottom: 10px;
 }
 
-#item-container .box-body {
+.gallery .box-body {
 	margin: 10px 10px 0 10px;
 }
 
-#item-container .box-body p {
+.gallery .box-body p {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
 
-#item-container .box-body:empty {
+.gallery .box-body:empty {
     display: none;
 }
 

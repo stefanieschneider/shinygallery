@@ -1,58 +1,23 @@
-#' @title Create an Image Gallery
+#' @title Create an Image Gallery Widget
 #'
-#' @description Create an image gallery with pagination based on file or URL
-#' paths to images.
+#' @description Create an image gallery widget with pagination based on file or
+#' URL paths to images.
 #'
-#' @param inputId The \code{input} slot that will be used to access the values.
 #' @param values File or URL paths to images that are to be displayed.
+#' @param width The width of the input container, e.g., \code{'100\%'}; see
+#' \link{validateCssUnit}.
 #' @param height The height of each input image, e.g., \code{'200px'}; see
 #' \link{validateCssUnit}.
 #' @param options A list of initialization options.
 #'
-#' @return An image gallery control that can be added to a UI definition.
-#'
-#' @examples
-#' ## Only run examples in interactive R sessions
-#' if (interactive()) {
-#'   library(shiny)
-#'   library(shinygallery)
-#'
-#'   get_uri <- function(file) {
-#'     file_ext <- paste0("image/", tools::file_ext(file))
-#'     base64enc::dataURI(file = file, mime = file_ext)
-#'   }
-#'
-#'   file_path <- system.file("extdata", package = "shinygallery")
-#'
-#'   files <- list.files(file_path, full.names = TRUE)
-#'   values <- rep(sapply(files, get_uri), 10)
-#'
-#'   ui <- fluidPage(
-#'     gallery(
-#'       "artworks", values = values,
-#'       options = list(
-#'         "detailsLabel" = "Details",
-#'         "addLabel" = "Add"
-#'       )
-#'     )
-#'   )
-#'
-#'   server <- function(input, output, session) {
-#'     observeEvent(input$jPages_click, {
-#'       print(input$jPages_click)
-#'     })
-#'   }
-#'
-#'   shinyApp(ui, server)
-#' }
+#' @return An image gallery widget that can be added to a UI definition.
 #'
 #' @importFrom utils modifyList
 #' @importFrom shiny validateCssUnit icon
-#' @importFrom htmltools div tags attachDependencies htmlDependency
-#' @importFrom htmltools tagList tagAppendChild tagAppendAttributes
+#' @importFrom htmltools div tags tagList tagAppendChild
 #'
 #' @export
-gallery <- function(inputId, values, height = "200px", options = list()) {
+gallery <- function(values, options = list(), width = NULL, height = NULL) {
   boxOptions <- tagList()
 
   if (!is.null(options[["detailsLabel"]])) {
@@ -77,9 +42,7 @@ gallery <- function(inputId, values, height = "200px", options = list()) {
     )
   }
 
-  if (length(boxOptions) > 0) {
-    boxOptions <- tags$ul(boxOptions)
-  }
+  if (length(boxOptions) > 0) boxOptions <- tags$ul(boxOptions)
 
   if (is.vector(values)) {
     values <- data.frame(
@@ -89,29 +52,17 @@ gallery <- function(inputId, values, height = "200px", options = list()) {
   }
 
   if (is.data.frame(values)) {
-    if (!("id" %in% colnames(values))) {
-      values$id <- 1:nrow(values)
-    }
-
-    if (!("title" %in% colnames(values))) {
-      values$title <- NA
-    }
-
-    if (!("subtitle" %in% colnames(values))) {
-      values$subtitle <- NA
-    }
+    if (!("title" %in% colnames(values))) values$title <- NA
+    if (!("subtitle" %in% colnames(values))) values$subtitle <- NA
+    if (!("id" %in% colnames(values))) values$id <- 1:nrow(values)
   }
 
   options <- modifyList(
-    getOption("jPages.options", list()),
-    if (is.function(options)) options() else options
+    getOption("jPages.options", list()), options
   )
 
   if (is.null(options[["perRow"]])) options$perRow <- 4
   if (is.null(options[["perPage"]])) options$perPage <- 12
-
-  options$class <- "shiny-input-container input-gallery"
-  options$id <- inputId; options$style <- "width: 100%;"
 
   images <- tagList(
     apply(
@@ -120,25 +71,17 @@ gallery <- function(inputId, values, height = "200px", options = list()) {
     )
   )
 
-  div_container <- div(div(id = "item-container", images))
-  div_container$attribs <- options
+  data <- as.character(div(id = "item-container", images))
 
-  attachDependencies(
-    div_container, htmlDependency(
-      name = "jPages", version = "0.7",
-      package = "shinygallery", src = "assets",
-      script = c(
-        "js/jPages.js", "js/jPages-bindings.js",
-        "js/lazyload.js", "js/sprintf.js"
-      ),
-      stylesheet = "css/style.css"
-    ), append = TRUE
+  htmlwidgets::createWidget(
+    "gallery", list(data = data, options = options),
+    width = width, height = height
   )
 }
 
 #' @importFrom shiny validateCssUnit
 #' @importFrom htmltools div img tags
-get_box <- function(row, perRow, height, boxOptions) {
+get_box <- function(row, perRow, boxOptions, height) {
   perRow <- as.integer(12 / perRow)
 
   div(
