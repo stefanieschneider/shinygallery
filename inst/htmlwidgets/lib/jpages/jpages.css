@@ -1,3 +1,17 @@
+.jp-invisible {
+    visibility: hidden !important;
+}
+
+.jp-hidden { 
+    display: none !important;
+}
+
+.gallery .container {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
 .gallery img {
     object-fit: cover;
     height: 100%;
@@ -28,7 +42,6 @@
 	left: 0;
 	top: 0;
 	width: 100%;
-	padding: 10px;
 	background-color: rgba(255, 255, 255, 0.95);
 	-webkit-transform: translateY(-100px);
 	-moz-transform: translateY(-100px);
@@ -45,10 +58,10 @@
 }
 
 .gallery .box-option ul {
+    margin: 10px;
     width: 100%;
     display: table;
     list-style-type: none;
-    margin: 0;
     padding: 0;
 }
 
@@ -57,7 +70,7 @@
     width: 25%;
 }
 
-.gallery .box-option ul > li > a {
+.gallery .box-option ul > li > div {
     display: block;
     text-align: center;
     font-size: 18px;
@@ -66,14 +79,14 @@
     -webkit-transition: .25s ease-in-out;
 	-moz-transition: .25s ease-in-out;
 	-o-transition: .25s ease-in-out;
-	text-decoration: none;
+	cursor: pointer;
 }
 
-.gallery .box-option ul > li > a:hover {
+.gallery .box-option ul > li > div:hover {
 	color: #5f3d8c;
 }
 
-.gallery .box-option ul > li > a span {
+.gallery .box-option ul > li > div span {
     display: block;
     padding: 5px 0;
     text-align: center;
@@ -83,7 +96,7 @@
     text-transform: uppercase;
 }
 
-.gallery .box-option:empty {
+.gallery .box-option ul:empty {
     display: none;
 }
 

@@ -46,8 +46,8 @@ if (interactive()) {
   ui <- fluidPage(galleryOutput("gallery"))
 
   server <- function(input, output, session) {
-    observeEvent(input$gallery_click, {
-      print(input$gallery_click)
+    observeEvent(input$gallery_click_id, {
+      print(input$gallery_click_value)
     })
 
     output$gallery <- renderGallery({

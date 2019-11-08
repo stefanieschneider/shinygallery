@@ -18,35 +18,9 @@
 #'
 #' @export
 gallery <- function(values, options = list(), width = NULL, height = NULL) {
-  boxOptions <- tagList()
-
-  if (!is.null(options[["detailsLabel"]])) {
-    boxOptions <- tagAppendChild(
-      boxOptions, tags$li(
-        tags$a(
-          href = "#info", icon("info-circle"),
-          tags$span(options[["detailsLabel"]])
-        )
-      )
-    )
-  }
-
-  if (!is.null(options[["addLabel"]])) {
-    boxOptions <- tagAppendChild(
-      boxOptions, tags$li(
-        tags$a(
-          href = "#plus", icon("plus-circle"),
-          tags$span(options[["addLabel"]])
-        )
-      )
-    )
-  }
-
-  if (length(boxOptions) > 0) boxOptions <- tags$ul(boxOptions)
-
   if (is.vector(values)) {
     values <- data.frame(
-      id = 1:length(values), file_path = values, title = NA,
+      id = 1:length(values), path = values, title = NA,
       subtitle = NA, stringsAsFactors = FALSE
     )
   }
@@ -64,45 +38,15 @@ gallery <- function(values, options = list(), width = NULL, height = NULL) {
   if (is.null(options[["perRow"]])) options$perRow <- 4
   if (is.null(options[["perPage"]])) options$perPage <- 12
 
-  images <- tagList(
-    apply(
-      values, 1, FUN = get_box, perRow = options$perRow,
-      height = height, boxOptions = boxOptions
-    )
-  )
+  data <- lapply(split(values, 1:nrow(values)), unlist)
 
-  data <- as.character(div(id = "item-container", images))
+  dependencies <- list(
+    rmarkdown::html_dependency_jquery(),
+    rmarkdown::html_dependency_bootstrap("default")
+  )
 
   htmlwidgets::createWidget(
-    "gallery", list(data = data, options = options),
-    width = width, height = height
-  )
-}
-
-#' @importFrom shiny validateCssUnit
-#' @importFrom htmltools div img tags
-get_box <- function(row, perRow, boxOptions, height) {
-  perRow <- as.integer(12 / perRow)
-
-  div(
-    class = paste0("col-sm-", perRow),
-    div(
-      class = "box", `data-id` = trimws(row["id"]),
-      if (!is.null(boxOptions))
-        div(class = "box-option", boxOptions),
-      div(
-        class = "box-image", style = if (!is.null(height))
-          paste0("height: ", validateCssUnit(height), ";"),
-        img(
-          title = if (!is.na(row["title"])) row["title"],
-          `data-original` = row["file_path"], class = "lazy"
-        )
-      ),
-      div(
-        class = "box-body",
-        if (!is.na(row["title"])) tags$h5(row["title"]),
-        if (!is.na(row["subtitle"])) tags$h6(row["subtitle"])
-      )
-    )
+    "gallery", list(data = unname(data), options = options),
+    width = width, height = height, dependencies = dependencies
   )
 }
