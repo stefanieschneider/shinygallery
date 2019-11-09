@@ -13,8 +13,6 @@
 #' @return An image gallery widget that can be added to a UI definition.
 #'
 #' @importFrom utils modifyList
-#' @importFrom shiny validateCssUnit icon
-#' @importFrom htmltools div tags tagList tagAppendChild
 #'
 #' @export
 gallery <- function(values, options = list(), width = NULL, height = NULL) {
@@ -29,6 +27,8 @@ gallery <- function(values, options = list(), width = NULL, height = NULL) {
     if (!("title" %in% colnames(values))) values$title <- NA
     if (!("subtitle" %in% colnames(values))) values$subtitle <- NA
     if (!("id" %in% colnames(values))) values$id <- 1:nrow(values)
+
+    values <- lapply(split(values, 1:nrow(values)), unlist)
   }
 
   options <- modifyList(
@@ -38,15 +38,13 @@ gallery <- function(values, options = list(), width = NULL, height = NULL) {
   if (is.null(options[["perRow"]])) options$perRow <- 4
   if (is.null(options[["perPage"]])) options$perPage <- 12
 
-  data <- lapply(split(values, 1:nrow(values)), unlist)
-
   dependencies <- list(
     rmarkdown::html_dependency_jquery(),
     rmarkdown::html_dependency_bootstrap("default")
   )
 
   htmlwidgets::createWidget(
-    "gallery", list(data = unname(data), options = options),
+    "gallery", list(data = unname(values), options = options),
     width = width, height = height, dependencies = dependencies
   )
 }
