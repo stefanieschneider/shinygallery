@@ -7,65 +7,15 @@ HTMLWidgets.widget({
 
 		return {
 			renderValue: function(opts) {
-				if (opts.options.selectLabel == null) {
-					opts.options.selectLabel = "records per page";
-				}
-
-				if (opts.options.infoLabel == null) {
-					opts.options.infoLabel = "%s to %s of %s entries";
-				}
-
-				var box_options = [];
-
-				var box_option = "<li>" +
-								 "  <div data-action=\"%s\">" +
-								 "    <i class=\"fa fa-%s-circle\"></i>" +
-								 "    <span>%s</span>" +
-								 "  </div>" +
-								 "</li>";
-
-				if (opts.options.addLabel) {
-					box_options.splice(1, 0, vsprintf(box_option, [
-						"add", "plus", opts.options.addLabel
-					]));
-				}
-
-				if (opts.options.detailsLabel) {
-					box_options.splice(1, 0, vsprintf(box_option, [
-						"details", "info", opts.options.detailsLabel
-					]));
-				}
-
-				var element_width = parseInt(12 / opts.options.perRow);
-
-				var box = "<div class=\"col-sm-%s\">" +
-						  "  <div class=\"box\" data-id=\"%s\">" +
-						  "    <div class=\"box-option\"><ul>%s</ul></div>" +
-						  "    <div class=\"box-image\" style=\"height: %spx\">" +
-						  "      <img class=\"lazy\" data-original=\"%s\">" +
-						  "    </div>" +
-						  "    <div class=\"box-body\">%s</div>" +
-						  "  </div>" +
-						  "</div>"
-
-				var elements = opts.data.map(element => {
-					var body_options = [];
-
-					if (element.title) {
-						body_options.push("<h5>" + element.title + "</h5>");
-					}
-
-					if (element.subtitle) {
-						body_options.push("<h6>" + element.subtitle + "</h6>");
-					}
-
-					return vsprintf(box, [
-						element_width, element.id, box_options.join(""), 
-						height, element.path, body_options.join("")
-					]);
-				});
-
 				if (!$(gallery_id).length) {
+					if (opts.options.selectLabel == null) {
+						opts.options.selectLabel = "records per page";
+					}
+
+					if (opts.options.infoLabel == null) {
+						opts.options.infoLabel = "%s to %s of %s entries";
+					}
+
 					$(el).html("<div class=\"gallery-container\"></div>");
 					$(el).append("<div class=\"jp_bottom\"></div>");
 
@@ -96,17 +46,17 @@ HTMLWidgets.widget({
 						}
 					}
 
-					create(el, opts, elements);
+					create_pagination(el, opts, height);
 
 					$(el).find(".jp_bottom select").change(function() {
 						$(el).find(".jp_pagination").jPages("destroy");
 						opts.options.perPage = parseInt($(this).val());
 
-						create(el, opts, elements);
+						create_pagination(el, opts, height);
 					});
 				} else {
 					$(el).find(".jp_pagination").jPages("destroy");
-					create(el, opts, elements);
+					create_pagination(el, opts, height);
 				}
 			},
 
@@ -117,10 +67,14 @@ HTMLWidgets.widget({
 	}
 });
 
-function create(el, opts, items) {
+function create_pagination(el, opts, height) {
 	$(el).find(".jp_pagination").jPages({
-		container: "#" + el.id, items: items,
+		container: "#" + el.id + " .gallery-container", 
+		
+		items: opts.data, height: height, 
 		perPage: opts.options.perPage,
+		perRow: opts.options.perRow,
+		box: get_box_options(opts),
 
 		first: false, last: false,
 		previous: false, next: false,
@@ -141,8 +95,8 @@ function create(el, opts, items) {
 						var data_id = $(this).closest("div.box");
 						var data_id = $(data_id).attr("data-id");
 
-						Shiny.setInputValue(id + "_click_id", data_id);
-						Shiny.setInputValue(id + "_click_value", data_action);
+						Shiny.setInputValue(el.id + "_click_id", data_id);
+						Shiny.setInputValue(el.id + "_click_value", data_action);
 					}
 				});
 			});
@@ -150,4 +104,29 @@ function create(el, opts, items) {
 			$(el).find("img.lazy").lazyload({effect: "fadeIn"});
 		}
 	});
+}
+
+function get_box_options(opts) {
+	var box_options = [];
+
+	var box_option = "<li>" +
+					 "  <div data-action=\"%s\">" +
+					 "    <i class=\"fa fa-%s-circle\"></i>" +
+					 "    <span>%s</span>" +
+					 "  </div>" +
+					 "</li>";
+
+	if (opts.options.addLabel) {
+		box_options.splice(1, 0, vsprintf(box_option, [
+			"add", "plus", opts.options.addLabel
+		]));
+	}
+
+	if (opts.options.detailsLabel) {
+		box_options.splice(1, 0, vsprintf(box_option, [
+			"details", "info", opts.options.detailsLabel
+		]));
+	}
+
+	return box_options;
 }
