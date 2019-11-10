@@ -3,6 +3,8 @@ HTMLWidgets.widget({
 	type: "output",
 
 	factory: function(el, width, height) {
+		var gallery_id = "#" + el.id + " .gallery-container";
+
 		return {
 			renderValue: function(opts) {
 				if (opts.options.selectLabel == null) {
@@ -49,8 +51,6 @@ HTMLWidgets.widget({
 				var elements = opts.data.map(element => {
 					var body_options = [];
 
-					console.log(element.title);
-
 					if (element.title) {
 						body_options.push("<h5>" + element.title + "</h5>");
 					}
@@ -65,44 +65,49 @@ HTMLWidgets.widget({
 					]);
 				});
 
-				$(el).html("<div class=\"container\"></div>");
-				$(el).append("<div class=\"jPages_bottom\"></div>");
+				if (!$(gallery_id).length) {
+					$(el).html("<div class=\"gallery-container\"></div>");
+					$(el).append("<div class=\"jp_bottom\"></div>");
 
-				$("#" + el.id + " .jPages_bottom").append(
-					"<div class=\"jPages_info\"></div>",
-					"<div class=\"jPages_select\"></div>",
-					"<div class=\"jPages_pagination\"></div>"
-				);
+					$(el).find(".jp_bottom").append(
+						"<div class=\"jp_info\"></div>",
+						"<div class=\"jp_select\"></div>",
+						"<div class=\"jp_pagination\"></div>"
+					);
 
-				$("#" + el.id + " .jPages_select").append(
-					"<label><select name=\"jPages_length\" class=\"form-control " +
-					"input-sm\"></select> " + opts.options.selectLabel + "</label>"
-				);
+					$(el).find(".jp_select").append(
+						"<label><select name=\"jp_length\" class=\"form-control " +
+						"input-sm\"></select> " + opts.options.selectLabel + "</label>"
+					);
 
-				for (var i = 4; i >= 1; i--) {
-					var newPerPage = opts.options.perPage * i;
+					for (var i = 4; i >= 1; i--) {
+						var new_PerPage = opts.options.perPage * i;
 
-					if (i == 1) {
-						$("#" + el.id + " select[name =\"jPages_length\"]").prepend(
-							"<option value=\"" + newPerPage + "\" selected>" + 
-							newPerPage + "</option>"
-						); 
-					} else {
-						$("#" + el.id + " select[name =\"jPages_length\"]").prepend(
-							"<option value=\"" + newPerPage + "\">" + 
-							newPerPage + "</option>"
-						); 
+						if (i == 1) {
+							$(el).find("select[name =\"jp_length\"]").prepend(
+								"<option value=\"" + new_PerPage + "\" selected>" + 
+								new_PerPage + "</option>"
+							); 
+						} else {
+							$(el).find("select[name =\"jp_length\"]").prepend(
+								"<option value=\"" + new_PerPage + "\">" + 
+								new_PerPage + "</option>"
+							); 
+						}
 					}
+
+					create(el, opts, elements);
+
+					$(el).find(".jp_bottom select").change(function() {
+						$(el).find(".jp_pagination").jPages("destroy");
+						opts.options.perPage = parseInt($(this).val());
+
+						create(el, opts, elements);
+					});
+				} else {
+					$(el).find(".jp_pagination").jPages("destroy");
+					create(el, opts, elements);
 				}
-
-				create(el.id, opts, elements);
-
-				$("#" + el.id + " .jPages_bottom select").change(function() {
-					$("#" + el.id + " .jPages_pagination").jPages("destroy");
-					opts.options.perPage = parseInt($(this).val());
-
-					create(el.id, opts, elements);
-				});
 			},
 
 			resize: function(width, height) {
@@ -112,41 +117,37 @@ HTMLWidgets.widget({
 	}
 });
 
-function create(id, opts, items) {
-	var htmlWidgetsObj = HTMLWidgets.find("#" + id);
+function create(el, opts, items) {
+	$(el).find(".jp_pagination").jPages({
+		container: "#" + el.id, items: items,
+		perPage: opts.options.perPage,
 
-	if (typeof htmlWidgetsObj != "undefined") {
-		$("#" + id + " .jPages_pagination").jPages({
-			container: "#" + id + " .container",
-			items: items,
-			perPage: opts.options.perPage,
-			first: false, last: false,
-			previous: false, next: false,
+		first: false, last: false,
+		previous: false, next: false,
 
-			callback: function(pages, items) {
-				$("#" + id + " .jPages_info").html(
-					vsprintf(
-						opts.options.infoLabel, [items.range.start, 
-						items.range.end, items.count]
-					)
-				);
+		callback: function(pages, items) {
+			$(el).find(".jp_info").html(
+				vsprintf(
+					opts.options.infoLabel, [items.range.start, 
+					items.range.end, items.count]
+				)
+			);
 
-				$("#" + id + " .box-option div").each(function(index) {
-					$(this).on("click", function() {
-						if (HTMLWidgets.shinyMode) {
-							var data_action = $(this).attr("data-action");
+			$(el).find(".box-option div").each(function(index) {
+				$(this).on("click", function() {
+					if (HTMLWidgets.shinyMode) {
+						var data_action = $(this).attr("data-action");
 
-							var data_id = $(this).closest("div.box");
-							var data_id = $(data_id).attr("data-id");
+						var data_id = $(this).closest("div.box");
+						var data_id = $(data_id).attr("data-id");
 
-							Shiny.setInputValue(id + "_click_id", data_id);
-							Shiny.setInputValue(id + "_click_value", data_action);
-						}
-					});
+						Shiny.setInputValue(id + "_click_id", data_id);
+						Shiny.setInputValue(id + "_click_value", data_action);
+					}
 				});
+			});
 
-				$("#" + id + " img.lazy").lazyload({effect: "fadeIn"});
-			}
-		});
-	}
+			$(el).find("img.lazy").lazyload({effect: "fadeIn"});
+		}
+	});
 }
