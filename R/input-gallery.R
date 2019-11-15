@@ -23,20 +23,39 @@ gallery <- function(values, options = list(), width = NULL, height = NULL) {
     )
   }
 
+  options <- modifyList(
+    getOption("jPages.options", list()), options
+  )
+
   if (is.data.frame(values)) {
     if (!("title" %in% colnames(values))) values$title <- NA
     if (!("subtitle" %in% colnames(values))) values$subtitle <- NA
     if (!("id" %in% colnames(values))) values$id <- 1:nrow(values)
 
-    values <- lapply(split(values, 1:nrow(values)), unlist)
+    if (!is.null(options$limits) & length(options$limits) == 2) {
+      options$numberObjects <- nrow(values)
+      values <- values[options$limits[1]:options$limits[2], ]
+    }
+
+    if (is.list(values$title))
+     values$title <- unlist(lapply(values$title, `[[`, 1))
+
+    if (is.list(values$subtitle))
+      values$subtitle <- unlist(lapply(values$subtitle, `[[`, 1))
+
+    if (!is.null(options$titleLabel))
+      values$title[is.na(values$title)] <- options$titleLabel
+
+    if (!is.null(options$subtitleLabel))
+      values$subtitle[is.na(values$subtitle)] <- options$subtitleLabel
+
+    values <- values[, c("id", "path", "title", "subtitle")]
+    values <- split(values, 1:nrow(values))
   }
 
-  options <- modifyList(
-    getOption("jPages.options", list()), options
-  )
-
-  if (is.null(options[["perRow"]])) options$perRow <- 4
-  if (is.null(options[["perPage"]])) options$perPage <- 12
+  if (is.null(options$perRow)) options$perRow <- 4
+  if (is.null(options$perPage)) options$perPage <- 12
+  if (is.null(options$startPage)) options$startPage <- 1
 
   dependencies <- list(
     rmarkdown::html_dependency_jquery(),

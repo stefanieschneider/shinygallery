@@ -25,6 +25,8 @@ options(width = "100")
 
 This R package creates image gallery widgets with pagination to show images based on file or URL paths. shinygallery is built on top of [jPages](https://github.com/luis-almeida/jPages) and [Bootstrap](https://getbootstrap.com/).
 
+If `limits` is set in `options`, only images within the specified interval are rendered. This allows, e.g., to display further images only after a page change; the loading speed is thus improved.
+
 ## Installation
 
 You can install the development version of shinygallery from [GitHub](https://github.com/stefanieschneider/shinygallery):

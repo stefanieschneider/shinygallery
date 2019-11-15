@@ -15,13 +15,26 @@ if (interactive()) {
   ui <- fluidPage(galleryOutput("gallery"))
 
   server <- function(input, output, session) {
-    observeEvent(input$gallery_click_id, {
+    observe({
+      req(input$gallery_click_id)
+      req(input$gallery_click_value)
+
+      print(input$gallery_click_id)
       print(input$gallery_click_value)
+    })
+
+    observeEvent(input$gallery_page_id, {
+      print(input$gallery_page_id)
+    })
+
+    observeEvent(input$gallery_page_range, {
+      print(input$gallery_page_range)
     })
 
     output$gallery <- renderGallery({
       gallery(values, height = 150, options = list(
-        "detailsLabel" = "Details", "addLabel" = "Add"
+        "detailsLabel" = "Details", "addLabel" = "Add",
+        "titleLabel" = "Title", "subtitleLabel" = "Subtitle"
       ))
     })
   }

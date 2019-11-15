@@ -7,6 +7,18 @@ HTMLWidgets.widget({
 
 		return {
 			renderValue: function(opts) {
+				if (opts.options.limits != null) {
+					if (opts.options.numberObjects != null) {
+						var data = new Array(opts.options.numberObjects);
+
+						for (var i = 0; i < opts.data.length; i++) {
+							data[opts.options.limits[0] + i - 1] = opts.data[i];
+						}
+
+						opts.data = data;
+					}
+				}
+
 				if (!$(gallery_id).length) {
 					if (opts.options.selectLabel == null) {
 						opts.options.selectLabel = "records per page";
@@ -56,6 +68,8 @@ HTMLWidgets.widget({
 					});
 				} else {
 					$(el).find(".jp_pagination").jPages("destroy");
+					$(el).find("select[name =\"jp_length\"]").val(opts.options.perPage);
+
 					create_pagination(el, opts, height);
 				}
 			},
@@ -70,38 +84,41 @@ HTMLWidgets.widget({
 function create_pagination(el, opts, height) {
 	$(el).find(".jp_pagination").jPages({
 		container: "#" + el.id + " .gallery-container", 
-		
 		items: opts.data, height: height, 
-		perPage: opts.options.perPage,
-		perRow: opts.options.perRow,
-		box: get_box_options(opts),
+		
+		startPage: opts.options.startPage, box: get_box_options(opts),
+		perPage: opts.options.perPage, perRow: opts.options.perRow,
 
 		first: false, last: false,
 		previous: false, next: false,
 
 		callback: function(pages, items) {
+			var items_range = [items.range.start, items.range.end];
+			var per_page = parseInt($(el).find("select :selected").val());
+
+			$(el).find("img.lazy").lazyload({effect: "fadeIn"});
+
+			Shiny.setInputValue(el.id + "_page_id", pages.current);
+			Shiny.setInputValue(el.id + "_page_range", items_range);
+			Shiny.setInputValue(el.id + "_per_page", per_page);
+
 			$(el).find(".jp_info").html(
-				vsprintf(
-					opts.options.infoLabel, [items.range.start, 
-					items.range.end, items.count]
-				)
+				vsprintf(opts.options.infoLabel, items_range.concat(items.count))
 			);
 
 			$(el).find(".box-option div").each(function(index) {
 				$(this).on("click", function() {
 					if (HTMLWidgets.shinyMode) {
-						var data_action = $(this).attr("data-action");
-
 						var data_id = $(this).closest("div.box");
 						var data_id = $(data_id).attr("data-id");
 
-						Shiny.setInputValue(el.id + "_click_id", data_id);
-						Shiny.setInputValue(el.id + "_click_value", data_action);
+						var data_action = $(this).attr("data-action");
+
+						Shiny.setInputValue(el.id + "_click_id", data_id, {priority: "event"});
+						Shiny.setInputValue(el.id + "_click_value", data_action, {priority: "event"});
 					}
 				});
 			});
-
-			$(el).find("img.lazy").lazyload({effect: "fadeIn"});
 		}
 	});
 }
@@ -110,11 +127,11 @@ function get_box_options(opts) {
 	var box_options = [];
 
 	var box_option = "<li>" +
-					 "  <div data-action=\"%s\">" +
-					 "    <i class=\"fa fa-%s-circle\"></i>" +
-					 "    <span>%s</span>" +
-					 "  </div>" +
-					 "</li>";
+		"  <div data-action=\"%s\">" +
+		"    <i class=\"fa fa-%s-circle\"></i>" +
+		"    <span>%s</span>" +
+		"  </div>" +
+		"</li>";
 
 	if (opts.options.addLabel) {
 		box_options.splice(1, 0, vsprintf(box_option, [

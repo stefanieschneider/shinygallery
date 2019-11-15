@@ -16,6 +16,10 @@ images based on file or URL paths. shinygallery is built on top of
 [jPages](https://github.com/luis-almeida/jPages) and
 [Bootstrap](https://getbootstrap.com/).
 
+If `limits` is set in `options`, only images within the specified
+interval are rendered. This allows, e.g., to display further images only
+after a page change; the loading speed is thus improved.
+
 ## Installation
 
 You can install the development version of shinygallery from
@@ -46,13 +50,26 @@ if (interactive()) {
   ui <- fluidPage(galleryOutput("gallery"))
 
   server <- function(input, output, session) {
-    observeEvent(input$gallery_click_id, {
+    observe({
+      req(input$gallery_click_id)
+      req(input$gallery_click_value)
+
+      print(input$gallery_click_id)
       print(input$gallery_click_value)
+    })
+
+    observeEvent(input$gallery_page_id, {
+      print(input$gallery_page_id)
+    })
+
+    observeEvent(input$gallery_page_range, {
+      print(input$gallery_page_range)
     })
 
     output$gallery <- renderGallery({
       gallery(values, height = 150, options = list(
-        "detailsLabel" = "Details", "addLabel" = "Add"
+        "detailsLabel" = "Details", "addLabel" = "Add",
+        "titleLabel" = "Title", "subtitleLabel" = "Subtitle"
       ))
     })
   }
