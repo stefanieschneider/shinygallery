@@ -34,7 +34,8 @@ if (interactive()) {
     output$gallery <- renderGallery({
       gallery(values, height = 150, options = list(
         "detailsLabel" = "Details", "addLabel" = "Add",
-        "titleLabel" = "Title", "subtitleLabel" = "Subtitle"
+        "titleLabel" = "Title", "subtitleLabel" = "Subtitle",
+        "draggable" = TRUE
       ))
     })
   }

@@ -6,6 +6,10 @@
     display: none !important;
 }
 
+.gallery {
+    position: relative;
+}
+
 .gallery img {
     object-fit: contain;
     background-color: #ddd;
@@ -130,6 +134,15 @@
 	float: left;
 }
 
+.jp_filter {
+    margin-left: 30px;
+    float: left;
+}
+
+.jp_filter input {
+    width: 250px;
+}
+
 .jp_select label {
     font-weight: normal;
     text-align: left;
@@ -146,7 +159,7 @@
     box-shadow: 0 0 0 0 transparent;
     line-height: 1.6;
     border-radius: 4px;
-    height: 32px;
+    height: 33px !important;
     font-size: 13px;
     margin-right: 15px;
     width: 75px;
@@ -228,4 +241,75 @@
 .gallery .box-body > h5 {
     font-style: italic;
     margin-bottom: 7px;
+}
+
+.gallery input[type="search"] {
+    color: #404040;
+    background-color: #fff;
+    border-color: #ddd;
+    outline: 0;
+    box-shadow: none;
+    line-height: 1.6;
+    border-radius: 4px;
+    height: 33px;
+    font-size: 13px;
+    -webkit-transition: border-color ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s;
+    transition: border-color ease-in-out .15s;
+}
+
+.gallery input[type="search"]:focus {
+    border-color: #cd3a56;
+}
+
+.gallery > .loader,
+body > .success {
+    margin: 0 15px 5px 15px;
+    border-radius: 3px;
+    position: absolute;
+    text-align: center;
+    width: calc(100% - 30px);
+    height: calc(100% - 5px);
+    top: 0;
+    background-color: rgba(255, 255, 255, 0.5);
+    color: #4E2880;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    z-index: 10001;
+}
+
+body > .success .fa-layers {
+    width: 75px;
+    margin: 0 auto;
+    position: relative;
+}
+
+body > .success .fa-layers > span {
+    position: absolute;
+    bottom: -12px;
+    right: 5px;
+}
+
+#vakata-dnd .jstree-draggable,
+.gallery .jstree-draggable {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: transparent;
+    text-align: center;
+    color: #4E2880 !important;
+    width: calc(100% - 30px);
+    height: calc(100% - 30px);
+    padding: 0;
+}
+
+#vakata-dnd .jstree-draggable span,
+.gallery .jstree-draggable span {
+    margin: 0 auto;
+}
+
+#vakata-dnd .jstree-draggable .fa-inverse {
+    color: #fff !important;
 }

@@ -13,6 +13,10 @@ dependencies:
     version: 1.1.2
     src: "htmlwidgets/lib/sprintf"
     script: sprintf.min.js
+  - name: jquery-ui
+    version: 1.12.1
+    src: "htmlwidgets/lib/jquery-ui"
+    script: jquery-ui.js
   - name: fontawesome
     version: 5.3.1
     src: "htmlwidgets/lib/fontawesome"
