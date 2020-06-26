@@ -33,6 +33,7 @@ HTMLWidgets.widget({
 
 					$(el).find(".jp_bottom").append(
 						"<div class=\"jp_info\"></div>",
+						"<div class=\"jp_icons\"></div>",
 						"<div class=\"jp_filter\"></div>",
 						"<div class=\"jp_select\"></div>",
 						"<div class=\"jp_pagination\"></div>"
@@ -42,6 +43,24 @@ HTMLWidgets.widget({
 						"<label><select name=\"jp_length\" class=\"form-control input-sm\">" +
 						"</select> <span>" + opts.options.selectLabel + "</span></label>"
 					);
+
+					if (opts.options.buttons) {
+						for (var i = opts.options.buttons.length - 1; i >= 0; i--) {
+							$(el).find(".jp_icons").prepend(
+								"<div class=\"jp_icon\"><i class=\"fa fa-" + 
+								opts.options.buttons[i] + "\"></i></div>"
+							);
+						}
+
+						$(el).find(".jp_icon").each(function(index) {
+							$(this).click(function() {
+								if (HTMLWidgets.shinyMode) {
+									var icon_class = this.firstChild.classList[1].split("-")[1];
+									Shiny.setInputValue(el.id + "_click_icon", icon_class, {priority: "event"});
+								}
+							});
+						});
+					}
 
 					for (var i = 4; i >= 1; i--) {
 						var new_PerPage = opts.options.perPage * i;
@@ -124,31 +143,38 @@ function create_pagination(el, opts, height) {
 
 		callback: function(pages, items) {
 			var per_page = parseInt($(el).find("select :selected").val());
-			$(el).find("img.lazy").lazyload({effect: "fadeIn"});
+			var lazy_load = new LazyLoad({elements_selector: ".lazy"});
+			var range = [items.range.start, items.range.end];
 
-			Shiny.setInputValue(el.id + "_page_range", [items.range.start, items.range.end]);
+			Shiny.setInputValue(el.id + "_page_range", range);
 			Shiny.setInputValue(el.id + "_page_id", pages.current);
 			Shiny.setInputValue(el.id + "_per_page", per_page);
 
 			$(el).find(".jp_info").html(
-				vsprintf(opts.options.infoLabel, [items.range.start.toLocaleString(), 
-					items.range.end.toLocaleString(), items.count.toLocaleString()])
+				vsprintf(
+					opts.options.infoLabel, [items.range.start.toLocaleString(), 
+					items.range.end.toLocaleString(), items.count.toLocaleString()]
+				)
 			);
 
 			$(el).find(".box-option div").each(function(index) {
 				$(this).on("click", function() {
 					if (HTMLWidgets.shinyMode) {
-						var data_id = $(this).closest("div.box");
-
-						var data_resource_id = $(data_id).attr("data-resource-id");
-						var data_id = $(data_id).attr("data-id");
-
+						var data = $(this).closest("div.box");
+						var data_resource_id = $(data).attr("data-resource-id");
+						
 						var data_action = $(this).attr("data-action");
-						add_success(data_action, seconds = 400);
+						var data_img = $(data).find("img")[0];
 
-						Shiny.setInputValue(el.id + "_click_id", data_id, {priority: "event"});
-						Shiny.setInputValue(el.id + "_click_resource_id", data_id, {priority: "event"});
+						Shiny.setInputValue(el.id + "_click_id", $(data).attr("data-id"), {priority: "event"});
+						Shiny.setInputValue(el.id + "_click_resource_id", data_resource_id, {priority: "event"});
 						Shiny.setInputValue(el.id + "_click_value", data_action, {priority: "event"});
+
+						Shiny.setInputValue(el.id + "_click_image", [
+							data_img.naturalWidth, data_img.naturalHeight, data_img.src
+						], {priority: "event"});
+
+						add_success(data_action, seconds = 400);
 					}
 				});
 			});
@@ -242,7 +268,7 @@ function add_success(data_action, seconds = 5000) {
 				   "      <span class=\"fa-stack\">" + 
 				   "         <i class=\"fas fa-circle fa-stack-2x fa-inverse\"></i>" +
 				   "         <i class=\"far fa-%s fa-stack-2x\"></i>" + 
-				   "      </span>"
+				   "      </span>" +
 				   "   </div>" +
 				   "</div>"
 

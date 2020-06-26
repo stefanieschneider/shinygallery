@@ -37,16 +37,18 @@ gallery <- function(values, options = list(), width = NULL, height = NULL) {
     values$id <- 1:nrow(values) # overwrite for correct indexing
 
     if (!is.null(options$limits) & length(options$limits) == 2) {
-      options$numberObjects <- nrow(values) # total number
-      values <- values[options$limits[1]:options$limits[2], ]
+      if (is.null(options$numberObjects))
+        options$numberObjects <- nrow(values) # total number
 
       if (max(options$limits) < nrow(values)) {
-        # options$limits <- c(min(options$limits), nrow(values))
+        options$limits <- c(min(options$limits), nrow(values))
+      } else {
+        # values <- values[options$limits[1]:options$limits[2], ]
       }
     }
 
     if (is.list(values$title))
-     values$title <- unlist(lapply(values$title, `[[`, 1))
+      values$title <- unlist(lapply(values$title, `[[`, 1))
 
     if (is.list(values$subtitle))
       values$subtitle <- unlist(lapply(values$subtitle, `[[`, 1))
@@ -64,8 +66,11 @@ gallery <- function(values, options = list(), width = NULL, height = NULL) {
       values$subtitle[replace] <- options$subtitleLabel
     }
 
-    values <- values[, c("id", "resourceid", "path", "title", "subtitle")]
-    values <- split(values, 1:nrow(values))
+    values <- values[, c(
+      "id", "resourceid", "path", "title", "subtitle"
+    )]
+
+    values <- split(values, 1:nrow(values), drop = FALSE)
   }
 
   if (is.null(options$perRow)) options$perRow <- 4
@@ -76,8 +81,8 @@ gallery <- function(values, options = list(), width = NULL, height = NULL) {
   if (is.null(options$draggable)) options$draggable <- FALSE
 
   dependencies <- list(
-    rmarkdown::html_dependency_jquery(),
-    rmarkdown::html_dependency_bootstrap("default")
+    rmarkdown::html_dependency_jquery()
+    # rmarkdown::html_dependency_bootstrap("default")
   )
 
   htmlwidgets::createWidget(

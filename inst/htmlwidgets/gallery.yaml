@@ -5,7 +5,7 @@ dependencies:
     script: jpages.min.js
     stylesheet: jpages.css
   - name: lazyload
-    version: 1.9.3
+    version: 16.1.0
     src: "htmlwidgets/lib/lazyload"
     script: lazyload.min.js
     stylesheet: lazyload.css
@@ -23,3 +23,22 @@ dependencies:
     stylesheet: 
       - all.min.css
       - v4-shims.min.css
+  - name: leaflet
+    version: 1.6.0
+    src: "htmlwidgets/lib/leaflet"
+    script: leaflet.js
+    stylesheet: leaflet.css
+  - name: leaflet-draw
+    version: 1.0.4
+    src: "htmlwidgets/lib/leaflet-draw"
+    script: leaflet.draw.js
+    stylesheet: leaflet.draw.css
+  - name: leaflet-fullscreen
+    version: 1.0.1
+    src: "htmlwidgets/lib/leaflet-fullscreen"
+    script: leaflet.fullscreen.js
+    stylesheet: leaflet.fullscreen.css
+  - name: leaflet-iiif
+    version: 3.0.0
+    src: "htmlwidgets/lib/leaflet-iiif"
+    script: leaflet.iiif.js
